@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h3>Mapping</h3><form method='post'>{% csrf_token %}<input type='hidden' name='batch_id' value='{{batch.pk}}'>{% for f in model_fields %}{{f}}: <select name='map_{{f}}'>{% for h in headers %}<option value='{{h}}'>{{h}}</option>{% endfor %}</select><br>{% endfor %}<button type='submit'>Başlat</button></form>{% endblock %}

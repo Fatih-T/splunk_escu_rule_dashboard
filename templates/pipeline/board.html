@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% load core_tags %}{% block content %}<h3>Board</h3><div class='row'>{% for s in stages %}<div class='col'><h5>{{s}}</h5>{% with d=board|dict_key:s %}{% for r in d.escu %}<div class='card p-2'>{{r.name}}</div>{% endfor %}{% endwith %}</div>{% endfor %}</div>{% endblock %}
