@@ -1,0 +1,2 @@
+.pipeline-col { min-height: 80vh; border-right: 1px solid #dee2e6; }
+.pipeline-col:last-child { border-right: none; }

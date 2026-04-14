@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card"><div class="card-body">
+<form method="get">Ad: {{ filter.form.name }} <button type="submit" class="btn btn-sm btn-primary">Ara</button></form>
+</div></div>
+<form method="post">{% csrf_token %}
+<table class="table"><thead><tr><th><input type="checkbox" id="select-all"></th><th>Ad</th><th>Durum</th><th>İşlem</th></tr></thead>
+<tbody>{% for r in filter.qs %}<tr><td><input type="checkbox" name="row_checkbox" value="{{r.pk}}" class="row-checkbox"></td><td>{{r.name}}</td><td>{{r.status}}</td><td><a href="{% url 'escu_detail' r.pk %}" class="btn btn-xs btn-info">Detay</a></td></tr>{% endfor %}</tbody>
+</table>
+<div id="bulk-action-bar" style="display:none; position:fixed; bottom:10px; right:10px; background:white; padding:10px; border:1px solid #ccc;">
+  <button type="submit" name="bulk_action" value="export_csv" class="btn btn-xs btn-info">CSV</button>
+</div>
+</form>
+{% endblock %}
+{% block extra_js %}<script>
+document.getElementById('select-all').onchange = function() {
+  document.querySelectorAll('.row-checkbox').forEach(c => c.checked = this.checked);
+  document.getElementById('bulk-action-bar').style.display = this.checked ? 'block' : 'none';
+};
+</script>{% endblock %}

@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h3>Create CB</h3><form method='post'>{% csrf_token %}Ad: <input name='name'><br>ID: <input name='rule_id'><br>Sorgu: <textarea name='query'></textarea><br><button type='submit'>Oluştur</button></form>{% endblock %}
