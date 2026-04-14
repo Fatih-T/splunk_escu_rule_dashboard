@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3>Dönüşüm Detayı</h3></div>
+    <div class="card-body">
+        <dl>
+            <dt>Kaynak ESCU Kuralı</dt><dd><a href="{% url 'escu_detail' conversion.escu_rule.pk %}">{{ conversion.escu_rule.name }}</a></dd>
+            {% if conversion.cb_rule %}
+            <dt>Hedef CB Kuralı</dt><dd><a href="{% url 'cb_detail' conversion.cb_rule.pk %}">{{ conversion.cb_rule.name }}</a></dd>
+            {% endif %}
+            <dt>Durum</dt><dd>{{ conversion.status }}</dd>
+            <dt>CB Sorgu Taslağı</dt><dd><pre>{{ conversion.cb_query_draft }}</pre></dd>
+            <dt>Adaptasyon Notları</dt><dd>{{ conversion.adaptation_notes }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

@@ -1,1 +1,14 @@
-{% extends 'base.html' %}{% block content %}<h3>CB List</h3>{% for r in rules %}{{r.name}}<br>{% endfor %}{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<div class="card card-default"><div class="card-header"><h3 class="card-title">Filtreleme</h3></div><div class="card-body">
+    <form method="get"><div class="row">{% for field in filter.form %}<div class="col-md-3"><div class="form-group">{{ field.label_tag }}{{ field }}</div></div>{% endfor %}</div>
+    <button type="submit" class="btn btn-sm btn-primary">Filtrele</button></form>
+</div></div>
+<form method="post">{% csrf_token %}<div class="card"><div class="card-header"><h3 class="card-title">CB Kuralları</h3>
+    <div class="card-tools"><a href="{% url 'cb_create' %}" class="btn btn-sm btn-primary">Yeni Kural</a></div></div>
+    <div class="card-body p-0"><table class="table table-sm"><thead><tr><th><input type="checkbox" id="select-all"></th><th>Ad</th><th>ID</th><th>Durum</th><th>İşlem</th></tr></thead>
+    <tbody>{% for r in filter.qs %}<tr><td><input type="checkbox" name="row_checkbox" value="{{r.pk}}" class="row-checkbox"></td><td>{{r.name}}</td><td><code>{{r.rule_id}}</code></td>
+    <td><span class="badge badge-{{r.get_status_badge}}">{{r.get_status_display}}</span></td>
+    <td><a href="{% url 'cb_detail' r.pk %}" class="btn btn-xs btn-info">Detay</a></td></tr>{% endfor %}</tbody></table></div>
+</div>{% include "partials/_bulk_action_bar.html" %}</form>
+{% endblock %}

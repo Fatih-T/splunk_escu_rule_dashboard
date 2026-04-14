@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Benzer Kural Analizi</h3>
+        <div class="card-tools">
+            <form method="post" action="{% url 'compute_similarity' %}">{% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-primary">Hesapla</button>
+            </form>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-striped">
+            <thead><tr><th>Kural A (ESCU)</th><th>Kural B (CB)</th><th>Skor</th><th>Eşleşen Alanlar</th></tr></thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td>{{ r.rule_a_label }}</td><td>{{ r.rule_b_label }}</td>
+                    <td>
+                        <span class="badge badge-{% if r.score >= 0.9 %}danger{% elif r.score >= 0.7 %}warning{% else %}secondary{% endif %}">
+                            {{ r.score }}
+                        </span>
+                    </td>
+                    <td>{% for f in r.match_fields %}<span class="badge badge-info">{{ f }}</span> {% endfor %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,1 +1,31 @@
-{% extends 'base.html' %}{% load core_tags %}{% block content %}<h3>Board</h3><div class='row'>{% for s in stages %}<div class='col'><h5>{{s}}</h5>{% with d=board|dict_key:s %}{% for r in d.escu %}<div class='card p-2'>{{r.name}}</div>{% endfor %}{% endwith %}</div>{% endfor %}</div>{% endblock %}
+{% extends "base.html" %}
+{% load core_tags %}
+{% block extra_css %}
+<style>
+    .pipeline-container { display: flex; overflow-x: auto; padding: 20px 0; }
+    .pipeline-col { min-width: 250px; max-width: 250px; background: #f4f6f9; margin-right: 10px; border-radius: 5px; padding: 10px; }
+    .pipeline-card { background: white; margin-bottom: 10px; padding: 10px; border-left: 5px solid #007bff; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+</style>
+{% endblock %}
+{% block content %}
+<div class="mb-3"><div class="btn-group">
+    <a href="?type=escu" class="btn btn-sm btn-default">ESCU</a><a href="?type=cb" class="btn btn-sm btn-default">CB</a><a href="?type=all" class="btn btn-sm btn-default">Hepsi</a>
+</div></div>
+<div class="pipeline-container">
+    {% for stage in stages %}
+    <div class="pipeline-col">
+        <h6>{{ stage|capfirst }}</h6><hr>
+        {% with d=board|dict_key:stage %}
+            {% for r in d.escu %}<div class="pipeline-card" style="border-left-color:#5a2d81">
+                <strong>{{ r.name }}</strong><br><small>ESCU</small>
+                <form method="post" action="{% url 'stage_transition' 'escu' r.pk %}" class="mt-1">{% csrf_token %}
+                    <input type="hidden" name="new_stage" value="under_review">
+                    <button type="submit" class="btn btn-xs btn-link p-0">→ İncele</button>
+                </form>
+            </div>{% endfor %}
+            {% for r in d.cb %}<div class="pipeline-card" style="border-left-color:#000000"><strong>{{ r.name }}</strong><br><small>CB</small></div>{% endfor %}
+        {% endwith %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

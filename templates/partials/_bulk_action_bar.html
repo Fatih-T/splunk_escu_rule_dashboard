@@ -1,0 +1,38 @@
+<div id="bulk-action-bar" class="card bg-light elevation-2" style="display:none; position: fixed; bottom: 20px; left: 280px; right: 30px; z-index: 1030;">
+    <div class="card-body p-2 d-flex align-items-center justify-content-between">
+        <div>
+            <span id="selected-count" class="badge badge-primary mr-3">0 kural seçildi</span>
+        </div>
+        <div class="d-flex align-items-center">
+            <button type="submit" name="bulk_action" value="export_csv" class="btn btn-sm btn-outline-dark mr-2">
+                <i class="fas fa-file-csv"></i> CSV İndir
+            </button>
+            <div class="input-group input-group-sm mr-2" style="width: 200px;">
+                <select name="new_status" class="form-control">
+                    <option value="">Durum Değiştir...</option>
+                    <option value="under_review">İncelemede</option>
+                    <option value="applicable">Uygulanabilir</option>
+                    <option value="active">Aktif</option>
+                    <option value="tuning">Ayar Yapılıyor</option>
+                    <option value="deprecated">Deprecated</option>
+                </select>
+                <div class="input-group-append">
+                    <button type="submit" name="bulk_action" value="change_status" class="btn btn-primary">Uygula</button>
+                </div>
+            </div>
+            <div class="input-group input-group-sm" style="width: 200px;">
+                <select name="analyst" class="form-control">
+                    <option value="">Analist Ata...</option>
+                    <option value="analyst_1">Analyst 1</option>
+                    <option value="analyst_2">Analyst 2</option>
+                    <option value="analyst_3">Analyst 3</option>
+                    <option value="analyst_4">Analyst 4</option>
+                    <option value="analyst_5">Analyst 5</option>
+                </select>
+                <div class="input-group-append">
+                    <button type="submit" name="bulk_action" value="assign" class="btn btn-success">Ata</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,20 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card"><div class="card-body">
-<form method="get">Ad: {{ filter.form.name }} <button type="submit" class="btn btn-sm btn-primary">Ara</button></form>
-</div></div>
-<form method="post">{% csrf_token %}
-<table class="table"><thead><tr><th><input type="checkbox" id="select-all"></th><th>Ad</th><th>Durum</th><th>İşlem</th></tr></thead>
-<tbody>{% for r in filter.qs %}<tr><td><input type="checkbox" name="row_checkbox" value="{{r.pk}}" class="row-checkbox"></td><td>{{r.name}}</td><td>{{r.status}}</td><td><a href="{% url 'escu_detail' r.pk %}" class="btn btn-xs btn-info">Detay</a></td></tr>{% endfor %}</tbody>
-</table>
-<div id="bulk-action-bar" style="display:none; position:fixed; bottom:10px; right:10px; background:white; padding:10px; border:1px solid #ccc;">
-  <button type="submit" name="bulk_action" value="export_csv" class="btn btn-xs btn-info">CSV</button>
-</div>
+{% include "partials/_filter_bar.html" %}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">ESCU Kuralları</h3>
+            <div class="card-tools">
+                <a href="{% url 'escu_import' %}" class="btn btn-sm btn-success"><i class="fas fa-file-import"></i> Import CSV</a>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" id="select-all"></th>
+                        <th>Adı</th>
+                        <th>ID</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Analist</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rule in filter.qs %}
+                    <tr>
+                        <td><input type="checkbox" name="row_checkbox" value="{{ rule.pk }}" class="row-checkbox"></td>
+                        <td>{{ rule.name }}</td>
+                        <td><code>{{ rule.rule_id }}</code></td>
+                        <td>{{ rule.severity }}</td>
+                        <td><span class="badge badge-{{ rule.get_status_badge }}">{{ rule.get_status_display }}</span></td>
+                        <td>{{ rule.assigned_analyst|default:"-" }}</td>
+                        <td><a href="{% url 'escu_detail' rule.pk %}" class="btn btn-xs btn-info">Detay</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% include "partials/_bulk_action_bar.html" %}
 </form>
 {% endblock %}
-{% block extra_js %}<script>
-document.getElementById('select-all').onchange = function() {
-  document.querySelectorAll('.row-checkbox').forEach(c => c.checked = this.checked);
-  document.getElementById('bulk-action-bar').style.display = this.checked ? 'block' : 'none';
-};
-</script>{% endblock %}

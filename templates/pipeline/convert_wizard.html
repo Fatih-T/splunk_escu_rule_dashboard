@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card card-outline card-primary">
+    <div class="card-header"><h3 class="card-title">Dönüşüm Sihirbazı (Adım {{ step }}/3)</h3></div>
+    <form method="post">{% csrf_token %}<input type="hidden" name="step" value="{{ step }}">
+        <div class="card-body">
+            {% if step == 1 %}
+            <h5>{{ escu_rule.name }}</h5><p>{{ escu_rule.description }}</p>
+            <div class="form-group"><label>Uygulanabilir mi?</label>
+                <select name="applicable" class="form-control" onchange="this.value=='no'?document.getElementById('reason').style.display='block':document.getElementById('reason').style.display='none'">
+                    <option value="yes">Evet</option><option value="no">Hayır</option>
+                </select>
+            </div>
+            <div class="form-group" id="reason" style="display:none;"><label>Neden?</label><textarea name="not_applicable_reason" class="form-control"></textarea></div>
+            {% elif step == 2 %}
+            <div class="row">
+                <div class="col-md-6"><h6>ESCU SPL</h6><pre class="bg-light p-2">{{ escu_rule.search }}</pre></div>
+                <div class="col-md-6"><h6>CB Query Draft</h6><textarea name="cb_query_draft" class="form-control" rows="10" required></textarea></div>
+            </div>
+            <div class="form-group mt-3"><label>Adaptasyon Notları</label><textarea name="adaptation_notes" class="form-control"></textarea></div>
+            {% elif step == 3 %}
+            <dl><dt>Kaynak</dt><dd>{{ escu_rule.name }}</dd><dt>Sorgu</dt><dd><pre>{{ conversion.cb_query_draft }}</pre></dd></dl>
+            <p class="text-warning">Onayladığınızda CB kuralı oluşturulacaktır.</p>
+            {% endif %}
+        </div>
+        <div class="card-footer"><button type="submit" class="btn btn-primary">{% if step == 3 %}Onayla{% else %}Devam{% endif %}</button></div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header"><h3 class="card-title">Import Geçmişi</h3></div>
+    <div class="card-body p-0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Dosya</th><th>Tarih</th><th>Durum</th><th>Yeni</th><th>Güncelleme</th><th>Deprecated</th><th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for batch in batches %}
+                <tr>
+                    <td>#{{ batch.pk }}</td>
+                    <td>{{ batch.filename }}</td>
+                    <td>{{ batch.imported_at|date:"Y-m-d H:i" }}</td>
+                    <td><span class="badge badge-{% if batch.status == 'processed' %}success{% elif batch.status == 'failed' %}danger{% else %}info{% endif %}">{{ batch.status }}</span></td>
+                    <td>{{ batch.rules_added }}</td>
+                    <td>{{ batch.rules_updated }}</td>
+                    <td>{{ batch.rules_deprecated }}</td>
+                    <td><a href="{% url 'escu_diff' batch.pk %}" class="btn btn-sm btn-info">Diff İzle</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<div class="direct-chat-msg">
+    <div class="direct-chat-infos clearfix">
+        <span class="direct-chat-name float-left">{{ comment.author }}</span>
+        <span class="direct-chat-timestamp float-right">{{ comment.created_at }}</span>
+    </div>
+    <div class="direct-chat-text">{{ comment.content }}</div>
+</div>
+{% for reply in comment.replies.all %}
+    <div style="margin-left: 30px;">
+        {% include "analysis/comment_partial.html" with comment=reply %}
+    </div>
+{% endfor %}

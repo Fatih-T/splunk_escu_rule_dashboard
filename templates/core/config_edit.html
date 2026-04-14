@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card"><div class="card-header"><h3>{{ config.key }} Düzenle</h3></div>
+<form method="post">{% csrf_token %}<div class="card-body">
+<div class="form-group"><label>Değer</label><textarea name="value" class="form-control">{{ config.value }}</textarea></div>
+</div><div class="card-footer"><button type="submit" class="btn btn-primary">Kaydet</button></div></form></div>
+{% endblock %}

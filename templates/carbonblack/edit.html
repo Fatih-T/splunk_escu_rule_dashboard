@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card card-warning">
+    <div class="card-header"><h3 class="card-title">Kural Düzenle: {{ rule.name }}</h3></div>
+    <form method="post">{% csrf_token %}
+        <div class="card-body">
+            <div class="form-group"><label>Ad</label><input type="text" name="name" class="form-control" value="{{ rule.name }}"></div>
+            <div class="form-group"><label>Sorgu</label><textarea name="query" class="form-control" rows="5">{{ rule.query }}</textarea></div>
+            <div class="form-group"><label>Açıklama</label><textarea name="description" class="form-control">{{ rule.description }}</textarea></div>
+            <div class="form-group"><label>Severity</label><input type="text" name="severity" class="form-control" value="{{ rule.severity }}"></div>
+            <div class="form-group"><label>Analist</label>
+                <select name="assigned_analyst" class="form-control">
+                    <option value="">Seçiniz...</option>
+                    <option value="analyst_1" {% if rule.assigned_analyst == 'analyst_1' %}selected{% endif %}>Analyst 1</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-footer"><button type="submit" class="btn btn-warning">Güncelle</button></div>
+    </form>
+</div>
+{% endblock %}

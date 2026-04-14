@@ -1,1 +1,103 @@
-{% extends 'base.html' %}{% block content %}<h3>{{rule.name}}</h3><p>{{rule.description}}</p><pre>{{rule.search}}</pre>{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-outline card-primary">
+            <div class="card-header"><h3 class="card-title">{{ rule.name }}</h3></div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Rule ID</dt><dd class="col-sm-9"><code>{{ rule.rule_id }}</code></dd>
+                    <dt class="col-sm-3">Açıklama</dt><dd class="col-sm-9">{{ rule.description }}</dd>
+                    <dt class="col-sm-3">SPL Sorgusu</dt><dd class="col-sm-9"><pre class="bg-light p-2">{{ rule.search }}</pre></dd>
+                    <dt class="col-sm-3">MITRE Tactic</dt><dd class="col-sm-9">{{ rule.mitre_tactic }}</dd>
+                    <dt class="col-sm-3">Severity</dt><dd class="col-sm-9">{{ rule.severity }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card card-tabs">
+            <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="ruleTab" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" id="conversions-tab" data-toggle="pill" href="#conversions" role="tab">CB Dönüşümleri</a></li>
+                    <li class="nav-item"><a class="nav-link" id="notes-tab" data-toggle="pill" href="#notes" role="tab">Notlar</a></li>
+                    <li class="nav-item"><a class="nav-link" id="audit-tab" data-toggle="pill" href="#audit" role="tab">Audit Log</a></li>
+                    <li class="nav-item"><a class="nav-link" id="history-tab" data-toggle="pill" href="#history" role="tab">Versiyon Geçmişi</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="conversions">
+                        {% for conv in conversions %}
+                            <div class="callout callout-info">
+                                <h5><a href="{% url 'cb_detail' conv.cb_rule.pk %}">{{ conv.cb_rule.name }}</a></h5>
+                                <p>{{ conv.adaptation_notes }}</p>
+                            </div>
+                        {% empty %}<p>Henüz dönüşüm yapılmamış.</p>{% endfor %}
+                    </div>
+                    <div class="tab-pane fade" id="notes">
+                        <a href="{% url 'note_add' 'escu' rule.pk %}" class="btn btn-sm btn-primary mb-3">Not Ekle</a>
+                        {% for note in notes %}
+                            <div class="post">
+                                <div class="user-block">
+                                    <span class="username"><a href="#">{{ note.author }}</a></span>
+                                    <span class="description">{{ note.created_at }}</span>
+                                </div>
+                                <p><b>{{ note.title }}</b><br>{{ note.content }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane fade" id="audit">
+                        <table class="table table-sm">
+                            <thead><tr><th>Tarih</th><th>Aksiyon</th><th>Aktör</th></tr></thead>
+                            <tbody>
+                                {% for log in audit_logs %}
+                                <tr><td>{{ log.created_at }}</td><td>{{ log.action }}</td><td>{{ log.actor_name }}</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="history">
+                        {% for ver in versions %}
+                            <div class="timeline timeline-inverse">
+                                <div><i class="fas fa-history bg-secondary"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="far fa-clock"></i> {{ ver.created_at }}</span>
+                                        <h3 class="timeline-header">Versiyon - Batch #{{ ver.batch.pk }}</h3>
+                                        <div class="timeline-body">{{ ver.change_summary }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-secondary">
+            <div class="card-header"><h3 class="card-title">Kural Durumu</h3></div>
+            <div class="card-body">
+                <p><b>Durum:</b> <span class="badge badge-{{ rule.get_status_badge }}">{{ rule.get_status_display }}</span></p>
+                <p><b>Analist:</b> {{ rule.assigned_analyst|default:"Atanmamış" }}</p>
+                <hr>
+                <form method="post" action="{% url 'stage_transition' 'escu' rule.pk %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Durum Değiştir</label>
+                        <select name="new_stage" class="form-control">
+                            <option value="under_review">İncelemede</option>
+                            <option value="applicable">Uygulanabilir</option>
+                            <option value="ready_for_cb">CB'ye Hazır</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Güncelle</button>
+                </form>
+                {% if rule.status == 'ready_for_cb' %}
+                <a href="{% url 'convert_wizard' rule.pk %}" class="btn btn-success btn-block mt-2">Dönüşüm Başlat</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

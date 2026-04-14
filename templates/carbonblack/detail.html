@@ -1,1 +1,10 @@
-{% extends 'base.html' %}{% block content %}<h3>CB Detail</h3><h4>{{rule.name}}</h4><pre>{{rule.query}}</pre>{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<div class="row"><div class="col-md-8"><div class="card"><div class="card-header"><h3>{{ rule.name }}</h3></div>
+<div class="card-body"><dl><dt>Rule ID</dt><dd><code>{{ rule.rule_id }}</code></dd><dt>Sorgu</dt><dd><pre>{{ rule.query }}</pre></dd></dl></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-header"><h3>Durum</h3></div><div class="card-body">
+    <p>Statü: <span class="badge badge-{{ rule.get_status_badge }}">{{ rule.get_status_display }}</span></p>
+    <a href="{% url 'cb_edit' rule.pk %}" class="btn btn-sm btn-warning btn-block">Düzenle</a>
+    <a href="{% url 'cb_delete' rule.pk %}" class="btn btn-sm btn-danger btn-block mt-1">Sil</a>
+</div></div></div></div>
+{% endblock %}
